@@ -1,4 +1,4 @@
-import Vue from 'vue/dist/vue';
+import {createApp} from 'vue';
 import expect from 'expect'
 
 import styleSheet from '../models/StyleSheet'
@@ -21,10 +21,10 @@ describe('component features', () => {
     const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = new Vue({
+    const vm = createApp({
       components: { StyledComp },
       template: `<styled-comp>ActualContent</styled-comp>`
-    }).$mount()
+    }).mount('body')
     expect(vm.$el.innerHTML).toEqual('ActualContent')
   })
   it('named slot', () => {
@@ -34,29 +34,29 @@ describe('component features', () => {
     const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = new Vue({
+    const vm = createApp({
       components: { StyledComp },
       template: `
         <styled-comp>
-          <template slot='content'>ActualContent</template>
+          <template v-slot:content>ActualContent</template>
         </styled-comp>`
-    }).$mount()
+    }).mount('body')
     expect(vm.$el.innerHTML).toEqual('ActualContent')
   })
   it('scoped slot', () => {
     const Comp = {
-      template: `<div><slot :p='"ActualContent"'>FallbackContent</slot></div>`
+      template: `<div><slot name="default" :p='"ActualContent"'>FallbackContent</slot></div>`
     }
     const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = new Vue({
+    const vm = createApp({
       components: { StyledComp },
       template: `
         <styled-comp>
-          <template slot-scope='{ p }'>{{ p }}</template>
+          <template #default='{ p }'>{{ p }}</template>
         </styled-comp>`
-    }).$mount()
+    }).mount('body')
     expect(vm.$el.innerHTML).toEqual('ActualContent')
   })
   it('named scoped slot', () => {
@@ -66,13 +66,13 @@ describe('component features', () => {
     const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = new Vue({
+    const vm = createApp({
       components: { StyledComp },
       template: `
         <styled-comp>
-          <template slot='content' slot-scope='{ p }'>{{ p }}</template>
+          <template #content='{ p }'>{{ p }}</template>
         </styled-comp>`
-    }).$mount()
+    }).mount('body')
     expect(vm.$el.innerHTML).toEqual('ActualContent')
   })
 

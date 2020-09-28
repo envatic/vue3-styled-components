@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import {createApp} from 'vue'
 import { assert } from 'chai'
 
 import { resetStyled } from './utils'
@@ -14,10 +14,10 @@ describe('extending styled', () => {
     const OldTarget = styled.div`color: blue;`
     const NewTarget = OldTarget.withComponent('a')
 
-    const o = new Vue(OldTarget).$mount()
-    const n = new Vue(NewTarget).$mount()
+    const o = createApp(OldTarget).mount('body')
+    const n = createApp(NewTarget).mount('body')
 
-    assert(o._vnode.tag === 'div');
-    assert(n._vnode.tag === 'a');
+    assert(o.$el instanceof HTMLDivElement);
+    assert(n.$el instanceof HTMLAnchorElement);
   })
 })

@@ -1,3 +1,4 @@
+import { h } from 'vue'
 import css from '../constructors/css'
 import normalizeProps from '../utils/normalizeProps'
 import isVueComponent from '../utils/isVueComponent'
@@ -6,83 +7,73 @@ export default (ComponentStyle) => {
   const createStyledComponent = (target, rules, props) => {
     const componentStyle = new ComponentStyle(rules)
 
+    const isStringTarget = typeof target === 'string'
     // handle array-declaration props
     const currentProps = normalizeProps(props)
     const prevProps = normalizeProps(target.props)
 
+    const passProps = ['as', 'value', ...Object.keys(prevProps)]
+
     const StyledComponent = {
-      inject: {
-        $theme: {
-          default: function () {
-            return () => ({ })
-          }
-        }
-      },
       props: {
         as: [String, Object],
         value: null,
+
         ...currentProps,
         ...prevProps
       },
+
+      inject: {
+        theme: {
+          default: { }
+        }
+      },
+
       data () {
         return {
           localValue: this.value
         }
       },
-      render (createElement) {
-        const children = []
-        for (const slot in this.$slots) {
-          if (slot === 'default') {
-            children.push(this.$slots[slot])
-          } else {
-            children.push(createElement('template', { slot }, this.$slots[slot]))
-          }
-        }
 
-        return createElement(
-          // Check if target is StyledComponent to preserve inner component styles for composition
+      computed: {
+        passProps () {
+          return passProps.reduce((props, propName) => {
+            if (propName === 'as' && isStringTarget) {
+              return props
+            }
+            if (this.$props[propName]) {
+              props[propName] = this.$props[propName]
+            }
+            return props
+          }, {})
+        }
+      },
+
+      watch: {
+        localValue (val) {
+          this.$emit('update:value', val)
+        }
+      },
+
+      render () {
+        const styleClass = componentStyle.generateAndInjectStyles({ theme: this.theme, ...this.$props })
+
+        return h(
           isVueComponent(target) ? target : this.$props.as || target,
           {
-            class: [this.generatedClassName],
-            props: this.$props,
-            domProps: {
-              value: this.localValue
-            },
-            on: {
-              ...this.$listeners,
-              input: event => {
-                if (event && event.target) {
-                  this.localValue = event.target.value
-                }
+            ...this.passProps,
+            class: [styleClass],
+            value: this.localValue,
+            onInput: event => {
+              if (event && event.target) {
+                this.localValue = event.target.value
               }
-            },
-            scopedSlots: this.$scopedSlots
+            }
           },
-          children
+          this.$slots
         )
       },
-      methods: {
-        generateAndInjectStyles (componentProps) {
-          return componentStyle.generateAndInjectStyles(componentProps)
-        }
-      },
-      computed: {
-        generatedClassName () {
-          const componentProps = { theme: this.theme, ...this.$props }
-          return this.generateAndInjectStyles(componentProps)
-        },
-        theme () {
-          return this.$theme()
-        }
-      },
-      watch: {
-        value (newValue) {
-          this.localValue = newValue
-        },
-        localValue () {
-          this.$emit('input', this.localValue)
-        }
-      },
+
       extend (cssRules, ...interpolations) {
         const extendedRules = css(cssRules, ...interpolations)
         return createStyledComponent(target, rules.concat(extendedRules), props)

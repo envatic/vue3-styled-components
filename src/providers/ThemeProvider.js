@@ -1,15 +1,15 @@
+import { h, provide } from 'vue'
+
 export default {
-  name: 'ThemeProvider',
   props: {
     theme: Object
   },
-  provide () {
-    return {
-      $theme: () => this.theme
-    }
+  setup (props, { slots }) {
+    provide('theme', props.theme)
   },
-  render: function (createElement) {
-    return createElement('div', {}, this.$slots.default)
+
+  render () {
+    return h('div', {}, this.$slots.default())
   }
 }
 

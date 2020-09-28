@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import { createApp, h } from 'vue'
 import expect from 'expect'
 import { resetStyled, expectCSSMatches } from './utils'
 
@@ -13,13 +13,11 @@ describe('"as" polymorphic prop', () => {
     const Base = styled.div`
       color: blue;
     `
-    const b = new Vue({
-      render: (h) => h(Base, {
-        props: {
-          as: 'button'
-        }
+    const b = createApp({
+      render: () => h(Base, {
+        as: 'button'
       })
-    }).$mount()
+    }).mount('body')
     expect(b.$el.tagName.toLowerCase()).toEqual('button')
   })
 
@@ -34,18 +32,16 @@ describe('"as" polymorphic prop', () => {
       background: ${props => props.bg};
     `
 
-    const b = new Vue(Base).$mount()
-    const c = new Vue({
-      render: (h) => h(Composed, {
-        props: {
-          bg: 'yellow',
-          as: 'dialog'
-        }
+    const b = createApp(Base).mount('body')
+    const c = createApp({
+      render: () => h(Composed, {
+        bg: 'yellow',
+        as: 'dialog'
       })
-    }).$mount()
+    }).mount('body')
 
     expect(c.$el.tagName.toLowerCase()).toEqual('dialog')
-    expect(c.$el._prevClass.includes(b.$el._prevClass)).toBeTruthy()
+    expect(c.$el.classList.contains(b.$el.classList.toString())).toBeTruthy()
     expectCSSMatches('.a{color: blue;} .b{background:yellow;}')
   })
 })

@@ -18,14 +18,18 @@ console.log(`Creating ${mode} bundle...`)
 const moduleName = 'styled'
 const exports = 'named'
 
+const globals = { vue: 'Vue' }
+
 const prodOutput = [
   { exports, file: 'dist/vue-styled-components.min.js', format: 'umd', name: moduleName }
 ]
 
 const devOutput = [
-  { exports, file: 'dist/vue-styled-components.js', format: 'umd', name: moduleName },
-  { exports, file: 'dist/vue-styled-components.es.js', format: 'es', name: moduleName }
+  { exports, globals, file: 'dist/vue-styled-components.js', format: 'umd', name: moduleName },
+  { exports, globals, file: 'dist/vue-styled-components.es.js', format: 'es', name: moduleName }
 ]
+
+const external = ['vue']
 
 const output = prod ? prodOutput : devOutput
 
@@ -65,5 +69,6 @@ if (prod) plugins.push(terser(), visualizer({ filename: './bundle-stats.html' })
 export default {
   input: 'src/index.js',
   output,
-  plugins
+  plugins,
+  external
 }

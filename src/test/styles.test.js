@@ -1,5 +1,5 @@
 import Vue from 'vue';
-
+import {createApp} from 'vue';
 import { resetStyled, expectCSSMatches } from './utils'
 
 let styled
@@ -17,7 +17,7 @@ describe('with styles', () => {
     const Comp = styled.div`
         ${rule}
       `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {color: blue;}')
   })
 
@@ -28,7 +28,7 @@ describe('with styles', () => {
         ${rule1}
         ${rule2}
       `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {color: blue;background: red;}')
   })
 
@@ -39,7 +39,7 @@ describe('with styles', () => {
     const Comp = styled.div`
         ${rule1}
       `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}')
   })
 
@@ -53,7 +53,7 @@ describe('with styles', () => {
     const Comp = styled.div`
         ${rule1}
       `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}@media screen and (min-width: 250px) {.a {background-color: red;}}')
   })
 
@@ -67,7 +67,7 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}.a:hover {-webkit-text-decoration: underline;text-decoration: underline;}')
   })
 
@@ -81,7 +81,7 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}.a:hover {-webkit-text-decoration: underline;text-decoration: underline;}')
   })
 
@@ -95,7 +95,7 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}.a > h1 {color: white;}')
   })
 
@@ -109,7 +109,7 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {background-color: blue;}html.something .a {color: white;}')
   })
 
@@ -123,8 +123,8 @@ describe('with styles', () => {
         ${secondRule}
       `
 
-    const vm1 = new Vue(FirstComp).$mount()
-    const vm2 = new Vue(SecondComp).$mount()
+    const vm1 = createApp(FirstComp).mount('body')
+    const vm2 = createApp(SecondComp).mount('body')
 
     expectCSSMatches('.a {background: blue;} .b {background: red;}')
   })
@@ -140,8 +140,8 @@ describe('with styles', () => {
       `
 
     // Switch rendering order, shouldn't change injection order
-    const vm2 = new Vue(SecondComp).$mount()
-    const vm1 = new Vue(FirstComp).$mount()
+    const vm2 = createApp(SecondComp).mount('body')
+    const vm1 = createApp(FirstComp).mount('body')
 
     // Classes _do_ get generated in the order of rendering but that's ok
     expectCSSMatches(`
@@ -157,7 +157,7 @@ describe('with styles', () => {
         ${comment}
         ${rule}
       `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches(`
         .a {color: blue;}
       `)

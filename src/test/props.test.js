@@ -1,7 +1,8 @@
-import Vue from 'vue'
+import { h, createApp } from 'vue'
 
 import { resetStyled, expectCSSMatches } from './utils'
 import ThemeProvider from "../providers/ThemeProvider"
+
 
 let styled
 
@@ -15,7 +16,7 @@ describe('props', () => {
     const Comp = styled('div', compProps)`
       color: ${props => props.fg || 'black'};
     `
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expectCSSMatches('.a {color: black;}')
   })
 
@@ -24,12 +25,13 @@ describe('props', () => {
     const Comp = styled('div', compProps)`
       color: ${props => props.fg || 'black'};
     `
-    const Ctor = Vue.extend(Comp)
-    const vm = new Ctor({
-      propsData: {
-        fg: 'red'
+    const Ctor = {extends: Comp}
+
+    const vm = createApp({
+      render() {
+        return h(Ctor, { fg: 'red' })
       }
-    }).$mount()
+    }).mount('body')
     expectCSSMatches('.a {color: red;}')
   })
 
@@ -42,22 +44,20 @@ describe('props', () => {
       color: ${props => props.theme.blue};
     `
     const Themed = {
-      render: function(createElement) {
-        return createElement(
+      render: function() {
+        return h(
           ThemeProvider,
           {
-            props: {
-              theme,
-            },
+            theme,
           },
           [
-            createElement(Comp)
+            h(Comp)
           ]
         )
       }
     }
 
-    const vm = new Vue(Themed).$mount()
+    const vm = createApp(Themed).mount('body')
     expectCSSMatches('.a {color: blue;}')
   })
 })

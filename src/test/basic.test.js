@@ -1,4 +1,4 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import expect from 'expect'
 
 import styleSheet from '../models/StyleSheet'
@@ -20,7 +20,7 @@ describe('basic', () => {
 
   it('should inject a stylesheet when a component is created', () => {
     const Comp = styled.div``
-    const vm = new Vue(Comp).$mount()
+    const vm = createApp(Comp).mount('body')
     expect(styleSheet.injected).toBe(true)
   })
 
@@ -41,20 +41,20 @@ describe('basic', () => {
 
   // it('should generate an empty tag once rendered', () => {
   //   const Comp = styled.div``
-  //   const vm = new Vue(Comp).$mount()
+  //   const vm = createApp(Comp).mount('body')
   //   expectCSSMatches('.a {  }')
   // })
 
   // /* TODO: we should probably pretty-format the output so this test might have to change */
   // it('should pass through all whitespace', () => {
   //   const Comp = styled.div`   \n   `
-  //   const vm = new Vue(Comp).$mount()
+  //   const vm = createApp(Comp).mount('body')
   //   expectCSSMatches('.a {    \n    }', { ignoreWhitespace: false })
   // })
 
   // it('should inject only once for a styled component, no matter how often it\'s mounted', () => {
   //   const Comp = styled.div``
-  //   const vm = new Vue(Comp).$mount()
+  //   const vm = createApp(Comp).mount('body')
   //   expectCSSMatches('.a {  }')
   // })
 
@@ -69,7 +69,7 @@ describe('basic', () => {
   //       template: '<Comp innerRef={(comp) => { this.testRef = comp }} />'
   //     })
 
-  //     const wrapper = new Vue(WrapperComp).$mount();
+  //     const wrapper = createApp(WrapperComp).mount('body');
   //     expect(wrapper.$el.testRef).toExist()
   //     expect(wrapper.$el.ref).toNotExist()
   //   })
@@ -86,7 +86,7 @@ describe('basic', () => {
   //       template: '<ChildComp innerRef={(comp) => { this.testRef = comp }} />'
   //     })
 
-  //     const wrapper = new Vue(WrapperComp).$mount();
+  //     const wrapper = createApp(WrapperComp).mount('body');
 
   //     expect(wrapper.node.testRef).toExist()
   //     expect(wrapper.node.ref).toNotExist()

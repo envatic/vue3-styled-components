@@ -1,5 +1,5 @@
 {
-  "name": "vue-styled-components",
+  "name": "@ux-and-i/vue3-styled-components",
   "version": "1.5.1",
   "description": "Visual primitives for the component age. A simple port of styled-components 💅 for Vue",
   "main": "lib/index.js",
@@ -78,7 +78,7 @@
     "rollup-plugin-terser": "^5.3.0",
     "rollup-plugin-visualizer": "^4.0.4",
     "rollup-plugin-vue2": "^0.8.1",
-    "vue": "^2.6.11"
+    "vue": "^3.0.0"
   },
   "lint-staged": {
     "*.js": [

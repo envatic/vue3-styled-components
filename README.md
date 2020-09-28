@@ -1,3 +1,13 @@
+# This is a fork of [vue-styled-components](https://github.com/styled-components/vue-styled-components)
+
+It has been refactored to work with Vuejs 3. Changes are too large to merge them back into the upstream and this version is not backwards compatible.
+
+Also, we'll have to see how the update path will work for Vuejs 2.x dependencies. This is a very quick, as-is-port of vue-styled-components, meaning it will only provide the functionality we need, until vue-styled-components hopefully has found its own path to Vuejs 3.
+
+Please note that the package name has been changed to `@ux-and-i/vue3-styled-components` to avoid any name collisions.
+
+---
+
 # vue-styled-components
 
 > Visual primitives for the component age. Use the best bits of ES6 and CSS to style your apps without stress 💅
