@@ -4,7 +4,7 @@ It has been refactored to work with Vuejs 3. Changes are too large to merge them
 
 Also, we'll have to see how the update path will work for Vuejs 2.x dependencies. This is a very quick, as-is-port of vue-styled-components, meaning it will only provide the functionality we need, until vue-styled-components hopefully has found its own path to Vuejs 3.
 
-Please note that the package name has been changed to `@ux-and-i/vue3-styled-components` to avoid any name collisions.
+Please note that the package name has been changed to `vue3-styled-components` to avoid any name collisions.
 
 ---
 
