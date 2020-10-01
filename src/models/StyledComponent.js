@@ -18,6 +18,7 @@ export default (ComponentStyle) => {
       props: {
         as: [String, Object],
         value: null,
+        modelValue: null,
 
         ...currentProps,
         ...prevProps
@@ -31,7 +32,7 @@ export default (ComponentStyle) => {
 
       data () {
         return {
-          localValue: this.value
+          localValue: this.modelValue || this.value
         }
       },
 
@@ -41,17 +42,35 @@ export default (ComponentStyle) => {
             if (propName === 'as' && isStringTarget) {
               return props
             }
-            if (this.$props[propName]) {
+            if (this.$props[propName] !== undefined) {
               props[propName] = this.$props[propName]
             }
             return props
           }, {})
+        },
+        valueProps () {
+          if (this.modelValue === undefined && this.value === undefined) {
+            return {}
+          }
+
+          return {
+            value: this.localValue,
+            onInput: event => {
+              if (event && event.target) {
+                this.localValue = event.target.value
+              }
+            }
+          }
         }
       },
 
       watch: {
         localValue (val) {
-          this.$emit('update:value', val)
+          if (this.modelValue !== undefined) {
+            this.$emit('update:modelValue', val)
+          } else {
+            this.$emit('update:value', val)
+          }
         }
       },
 
@@ -62,13 +81,9 @@ export default (ComponentStyle) => {
           isVueComponent(target) ? target : this.$props.as || target,
           {
             ...this.passProps,
-            class: [styleClass],
-            value: this.localValue,
-            onInput: event => {
-              if (event && event.target) {
-                this.localValue = event.target.value
-              }
-            }
+            ...this.valueProps,
+            ...this.$attrs,
+            class: [styleClass]
           },
           this.$slots
         )

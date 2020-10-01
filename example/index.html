@@ -160,7 +160,7 @@
           </wrapper>
           <w-2>
             <h-2 :animate="animated2"> {{text2}} </h-2>
-            <styled-input v-model:value="text2" />
+            <styled-input v-model="text2" />
             <super-btn visible @click="animated2 = !animated2"> An extension of Styled Button </super-btn>
           </w-2>
           <w-3
@@ -168,7 +168,7 @@
           >
           <custom-title :visible="true">Change Rendered Elements with "as" prop.</custom-title>
             <h3>Enter any HTML element and see the element rendered by the styled component change 👇🏽</h3>
-            <styled-input @keydown.enter="updateElement" placeholder="Enter an HTML element! Like 'button' or 'section'" v-model:value="element" />
+            <styled-input @keydown.enter="updateElement" placeholder="Enter an HTML element! Like 'button' or 'section'" v-model="element" />
             <custom-btn
               visible
               :as="setElement"
