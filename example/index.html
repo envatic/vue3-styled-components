@@ -135,6 +135,17 @@
         }
       `;
 
+      const MyTextField = styled.default('input', {
+        type: {
+          type: String,
+          default: 'text'
+        },
+        color: String
+      })`
+        padding: 10px;
+        border: 2px solid ${(props) => props.color};
+      `
+
       Vue.createApp({
         data() {
           return {
@@ -155,7 +166,7 @@
         }">
           <wrapper>
             <custom-title :animate="animated1"> {{text1}} </custom-title>
-            <styled-input v-model:value="text1" />
+            <styled-input :value="text1" @input="(e) => text1 = e.target.value" />
             <btn visible @click="animated1 = !animated1"> A Styled Button </btn>
           </wrapper>
           <w-2>
@@ -194,6 +205,7 @@
           CustomBtn,
           SuperCustomTitle,
           StyledInput,
+          MyTextField,
           "theme-provider": styled.ThemeProvider,
         },
         methods: {
