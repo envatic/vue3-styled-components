@@ -20,21 +20,6 @@ describe('props', () => {
     expectCSSMatches('.a {color: black;}')
   })
 
-  it('should execute interpolations and inject props', () => {
-    const compProps = { fg: String }
-    const Comp = styled('div', compProps)`
-      color: ${props => props.fg || 'black'};
-    `
-    const Ctor = {extends: Comp}
-
-    const vm = createApp({
-      render() {
-        return h(Ctor, { fg: 'red' })
-      }
-    }).mount('body')
-    expectCSSMatches('.a {color: red;}')
-  })
-
   it('should add any injected theme to the component', () => {
     const theme = {
       blue: "blue",

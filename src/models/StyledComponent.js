@@ -1,104 +1,78 @@
-import { h } from 'vue'
+import { h, inject } from 'vue'
 import css from '../constructors/css'
-import normalizeProps from '../utils/normalizeProps'
 import isVueComponent from '../utils/isVueComponent'
+import normalizeProps from '../utils/normalizeProps'
+import { commonHtmlAttributes as attributesToAlwaysPassOn } from '../utils/commonHtmlAttributes'
 
 export default (ComponentStyle) => {
-  const createStyledComponent = (target, rules, props) => {
+  const createStyledComponent = (tagOrComponent, rules, propDefinitions) => {
     const componentStyle = new ComponentStyle(rules)
+    const targetPropDefinitions = normalizeProps(tagOrComponent.props)
+    const ownPropDefinitions = normalizeProps(propDefinitions)
 
-    const isStringTarget = typeof target === 'string'
-    // handle array-declaration props
-    const currentProps = normalizeProps(props)
-    const prevProps = normalizeProps(target.props)
+    const targetPropDefinitionKeys = tagOrComponent.props ? Object.keys(
+      targetPropDefinitions
+    ) : attributesToAlwaysPassOn
 
-    const passProps = ['as', 'value', ...Object.keys(prevProps)]
+    const combinedPropDefinition = tagOrComponent.props
+      ? { ...ownPropDefinitions, ...targetPropDefinitions }
+      : ownPropDefinitions
 
-    const StyledComponent = {
+    return {
       props: {
         as: [String, Object],
-        value: null,
         modelValue: null,
-
-        ...currentProps,
-        ...prevProps
+        ...combinedPropDefinition
       },
 
-      inject: {
-        theme: {
-          default: { }
-        }
-      },
+      emits: ['input', 'update:modelValue'],
 
-      data () {
-        return {
-          localValue: this.modelValue || this.value
-        }
-      },
+      setup (props, { slots, attrs, emit }) {
+        const theme = inject('theme')
 
-      computed: {
-        passProps () {
-          return passProps.reduce((props, propName) => {
-            if (propName === 'as' && isStringTarget) {
-              return props
-            }
-            if (this.$props[propName] !== undefined) {
-              props[propName] = this.$props[propName]
-            }
-            return props
-          }, {})
-        },
-        valueProps () {
-          if (this.modelValue === undefined && this.value === undefined) {
-            return {}
+        return () => {
+          const styleClass = componentStyle.generateAndInjectStyles({ theme, ...props, ...attrs })
+          const classes = [styleClass]
+
+          if (attrs.class) {
+            classes.push(attrs.class)
           }
 
-          return {
-            value: this.localValue,
-            onInput: event => {
-              if (event && event.target) {
-                this.localValue = event.target.value
+          const targetProps = {}
+
+          if (targetPropDefinitionKeys.length) {
+            for (const [key, value] of Object.entries(props)) {
+              if (targetPropDefinitionKeys.includes(key)) {
+                targetProps[key] = value
               }
             }
           }
+
+          return h(
+            isVueComponent(tagOrComponent) ? tagOrComponent : props.as || tagOrComponent,
+            {
+              value: props.modelValue,
+              ...attrs,
+              ...targetProps,
+              class: classes,
+              onInput: (e) => {
+                emit('update:modelValue', e.target.value)
+                emit('input', e)
+              }
+            },
+            slots
+          )
         }
-      },
-
-      watch: {
-        localValue (val) {
-          if (this.modelValue !== undefined) {
-            this.$emit('update:modelValue', val)
-          } else {
-            this.$emit('update:value', val)
-          }
-        }
-      },
-
-      render () {
-        const styleClass = componentStyle.generateAndInjectStyles({ theme: this.theme, ...this.$props })
-
-        return h(
-          isVueComponent(target) ? target : this.$props.as || target,
-          {
-            ...this.passProps,
-            ...this.valueProps,
-            ...this.$attrs,
-            class: [styleClass]
-          },
-          this.$slots
-        )
       },
 
       extend (cssRules, ...interpolations) {
         const extendedRules = css(cssRules, ...interpolations)
-        return createStyledComponent(target, rules.concat(extendedRules), props)
+        return createStyledComponent(tagOrComponent, rules.concat(extendedRules), propDefinitions)
       },
       withComponent (newTarget) {
-        return createStyledComponent(newTarget, rules, props)
+        return createStyledComponent(newTarget, rules, propDefinitions)
       }
     }
-
-    return StyledComponent
   }
 
   return createStyledComponent

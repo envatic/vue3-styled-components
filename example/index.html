@@ -53,6 +53,7 @@
       `;
 
       const H2 = CustomTitle.withComponent("h2");
+      const H2Extended = { extends: H2 }
 
       const MyComponent = {
         props: ["visible"],
@@ -86,7 +87,7 @@
         background-color: ${(props) => props.bg};
       `;
 
-      const StyledInput = styled.default.input`
+      const StyledInput = styled.default('input')`
         display: block;
         width: 100%;
         height: 60px;
@@ -135,6 +136,17 @@
         }
       `;
 
+      const MyTextField = styled.default('input', {
+        type: {
+          type: String,
+          default: 'text'
+        },
+        color: String
+      })`
+        padding: 10px;
+        border: 2px solid ${(props) => props.color};
+      `
+
       Vue.createApp({
         data() {
           return {
@@ -154,8 +166,9 @@
           tertiary: 'lavenderblush'
         }">
           <wrapper>
+            <h-2-extended>Oha!</h-2-extended>
             <custom-title :animate="animated1"> {{text1}} </custom-title>
-            <styled-input v-model:value="text1" />
+            <styled-input :value="text1" @input="(e) => text1 = e.target.value" />
             <btn visible @click="animated1 = !animated1"> A Styled Button </btn>
           </wrapper>
           <w-2>
@@ -189,11 +202,13 @@
           W2,
           W3,
           H2,
+          H2Extended,
           Btn,
           SuperBtn,
           CustomBtn,
           SuperCustomTitle,
           StyledInput,
+          MyTextField,
           "theme-provider": styled.ThemeProvider,
         },
         methods: {
