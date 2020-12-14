@@ -2,6 +2,7 @@ import { h, inject } from 'vue'
 import css from '../constructors/css'
 import isVueComponent from '../utils/isVueComponent'
 import normalizeProps from '../utils/normalizeProps'
+import { commonHtmlAttributes as attributesToAlwaysPassOn } from '../utils/commonHtmlAttributes'
 
 export default (ComponentStyle) => {
   const createStyledComponent = (tagOrComponent, rules, propDefinitions) => {
@@ -11,7 +12,7 @@ export default (ComponentStyle) => {
 
     const targetPropDefinitionKeys = tagOrComponent.props ? Object.keys(
       targetPropDefinitions
-    ) : []
+    ) : attributesToAlwaysPassOn
 
     const combinedPropDefinition = tagOrComponent.props
       ? { ...ownPropDefinitions, ...targetPropDefinitions }
