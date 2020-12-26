@@ -3,11 +3,13 @@ import * as Vue from 'vue'
 
 type CSSProperties = CSS.Properties<string | number>
 
-type CSSPseudos = { [K in keyof CSS.Pseudos]?: CSSObject }
+type CSSPseudos = { [K in CSS.Pseudos]?: CSSObject }
 
 interface CSSObject extends CSSProperties, CSSPseudos {
   [key: string]: CSSObject | string | number | undefined
 }
+
+type CSS = CSSProperties
 
 type VueProps =
   | {
@@ -39,10 +41,7 @@ type StyledComponentElements<T extends HTMLElements = HTMLElements> = {
 }
 
 type StyledComponentElementsByName = {
-  <Props extends VueProps = {}, T extends keyof HTMLElements>(
-    component: T,
-    props?: Props
-  ): (
+  <Props = {}, T extends keyof HTMLElements>(component: T, props?: Props): (
     str: TemplateStringsArray,
     ...placeholders: ((
       props: PropsType<Props>
@@ -54,10 +53,7 @@ type Component = Vue.Component | Vue.DefineComponent
 
 export type Styled = StyledComponentElements &
   StyledComponentElementsByName & {
-    <Props extends VueProps = {}, T extends Component>(
-      component: T,
-      props?: Props
-    ): (
+    <Props = {}, T extends Component>(component: T, props?: Props): (
       str: TemplateStringsArray,
       ...placeholders: ((
         props: PropsType<Props>
