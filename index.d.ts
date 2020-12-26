@@ -11,170 +11,217 @@ interface CSSObject extends CSSProperties, CSSPseudos {
 
 type CSS = CSSProperties
 
-type VueProps =
-  | {
-      [propsName: string]: {
-        type: new (...args: any[]) => unknown
-        default?: unknown
-        required?: boolean
-        validator?(value: unknown): boolean
-      }
-    }
-  | {
-      [propsName: string]: new (...args: any[]) => unknown
-    }
-
-type PropsType<Props extends VueProps> = {
-  [K in keyof Props]: Props[K] extends {
-    type: new (...args: any[]) => unknown
-  }
-    ? InstanceType<Props[K]['type']>
-    : Props[K] extends new (...args: any[]) => unknown
-    ? InstanceType<Props[K]>
-    : never
-}
-
-type StyledComponentElements<T extends HTMLElements = HTMLElements> = {
-  [K in keyof T]: (
-    str: TemplateStringsArray
-  ) => Vue.DefineComponent<Vue.HTMLAttributes & T[K]>
-}
-
-type StyledComponentElementsByName = {
-  <Props = {}, T extends keyof HTMLElements>(component: T, props?: Props): (
-    str: TemplateStringsArray,
-    ...placeholders: ((
-      props: PropsType<Props>
-    ) => string | string | { toString: () => string | string })[]
-  ) => Vue.DefineComponent<Vue.HTMLAttributes & HTMLElements[T] & Props>
-}
-
 type Component = Vue.Component | Vue.DefineComponent
 
-export type Styled = StyledComponentElements &
-  StyledComponentElementsByName & {
-    <Props = {}, T extends Component>(component: T, props?: Props): (
-      str: TemplateStringsArray,
-      ...placeholders: ((
-        props: PropsType<Props>
-      ) => string | string | { toString: () => string | string })[]
-    ) => Vue.DefineComponent<Props> & T
-  }
+type StyledHTMLElement = {
+  [K in keyof IntrinsicElementAttributes]: (
+    str: TemplateStringsArray
+  ) => Vue.DefineComponent<IntrinsicElementAttributes[K]>
+}
 
-type HTMLElements = {
+type StyledFunctionHTMLElement = {
+  <
+    Props = { [key: string]: Vue.Prop<unknown> },
+    K extends keyof IntrinsicElementAttributes
+  >(
+    component: K,
+    props?: Props
+  ): (
+    str: TemplateStringsArray,
+    ...placeholders: ((
+      props: Vue.ExtractPropTypes<Props>
+    ) => string | { toString: () => string })[]
+  ) => Vue.DefineComponent<
+    Vue.ExtractPropTypes<Props> & IntrinsicElementAttributes[K]
+  >
+}
+
+type StyledVueComponent = {
+  <Props, T extends Component>(component: T): (
+    str: TemplateStringsArray
+  ) => Vue.DefineComponent<Props> & T
+}
+
+export type Styled = StyledHTMLElement &
+  StyledFunctionHTMLElement &
+  StyledVueComponent
+
+interface IntrinsicElementAttributes {
   a: Vue.AnchorHTMLAttributes
-  abbr: {}
-  address: {}
+  abbr: Vue.HTMLAttributes
+  address: Vue.HTMLAttributes
   area: Vue.AreaHTMLAttributes
-  article: {}
-  aside: {}
+  article: Vue.HTMLAttributes
+  aside: Vue.HTMLAttributes
   audio: Vue.AudioHTMLAttributes
-  b: {}
-  base: HTMLBaseElement
-  bdi: {}
-  bdo: {}
-  big: {}
-  blockquote: {}
-  body: {}
-  br: {}
+  b: Vue.HTMLAttributes
+  base: Vue.BaseHTMLAttributes
+  bdi: Vue.HTMLAttributes
+  bdo: Vue.HTMLAttributes
+  blockquote: Vue.BlockquoteHTMLAttributes
+  body: Vue.HTMLAttributes
+  br: Vue.HTMLAttributes
   button: Vue.ButtonHTMLAttributes
-  canvas: HTMLCanvasElement
-  caption: {}
-  cite: {}
-  code: {}
+  canvas: Vue.CanvasHTMLAttributes
+  caption: Vue.HTMLAttributes
+  cite: Vue.HTMLAttributes
+  code: Vue.HTMLAttributes
   col: Vue.ColHTMLAttributes
   colgroup: Vue.ColgroupHTMLAttributes
   data: Vue.DataHTMLAttributes
-  datalist: Vue.DataHTMLAttributes
-  dd: {}
-  del: {}
-  details: {}
-  dfn: {}
+  datalist: Vue.HTMLAttributes
+  dd: Vue.HTMLAttributes
+  del: Vue.DelHTMLAttributes
+  details: Vue.DetailsHTMLAttributes
+  dfn: Vue.HTMLAttributes
   dialog: Vue.DialogHTMLAttributes
-  div: {}
-  dl: {}
-  dt: {}
-  em: {}
+  div: Vue.HTMLAttributes
+  dl: Vue.HTMLAttributes
+  dt: Vue.HTMLAttributes
+  em: Vue.HTMLAttributes
   embed: Vue.EmbedHTMLAttributes
   fieldset: Vue.FieldsetHTMLAttributes
-  figcaption: {}
-  figure: {}
-  footer: {}
+  figcaption: Vue.HTMLAttributes
+  figure: Vue.HTMLAttributes
+  footer: Vue.HTMLAttributes
   form: Vue.FormHTMLAttributes
-  h1: {}
-  h2: {}
-  h3: {}
-  h4: {}
-  h5: {}
-  h6: {}
-  head: {}
-  header: {}
-  hgroup: {}
-  hr: {}
+  h1: Vue.HTMLAttributes
+  h2: Vue.HTMLAttributes
+  h3: Vue.HTMLAttributes
+  h4: Vue.HTMLAttributes
+  h5: Vue.HTMLAttributes
+  h6: Vue.HTMLAttributes
+  head: Vue.HTMLAttributes
+  header: Vue.HTMLAttributes
+  hgroup: Vue.HTMLAttributes
+  hr: Vue.HTMLAttributes
   html: Vue.HtmlHTMLAttributes
-  i: {}
+  i: Vue.HTMLAttributes
   iframe: Vue.IframeHTMLAttributes
   img: Vue.ImgHTMLAttributes
   input: Vue.InputHTMLAttributes
-  ins: {}
-  kbd: {}
-  keygen: {}
+  ins: Vue.InsHTMLAttributes
+  kbd: Vue.HTMLAttributes
+  keygen: Vue.KeygenHTMLAttributes
   label: Vue.LabelHTMLAttributes
-  legend: {}
+  legend: Vue.HTMLAttributes
   li: Vue.LiHTMLAttributes
   link: Vue.LinkHTMLAttributes
-  main: {}
+  main: Vue.HTMLAttributes
   map: Vue.MapHTMLAttributes
-  mark: {}
-  menu: {}
-  menuitem: {}
+  mark: Vue.HTMLAttributes
+  menu: Vue.MenuHTMLAttributes
   meta: Vue.MetaHTMLAttributes
-  meter: {}
-  nav: {}
-  noscript: {}
+  meter: Vue.MeterHTMLAttributes
+  nav: Vue.HTMLAttributes
+  noindex: Vue.HTMLAttributes
+  noscript: Vue.HTMLAttributes
   object: Vue.ObjectHTMLAttributes
   ol: Vue.OlHTMLAttributes
   optgroup: Vue.OptgroupHTMLAttributes
   option: Vue.OptionHTMLAttributes
-  output: {}
-  p: {}
+  output: Vue.OutputHTMLAttributes
+  p: Vue.HTMLAttributes
   param: Vue.ParamHTMLAttributes
-  picture: {}
-  pre: {}
+  picture: Vue.HTMLAttributes
+  pre: Vue.HTMLAttributes
   progress: Vue.ProgressHTMLAttributes
   q: Vue.QuoteHTMLAttributes
-  rp: {}
-  rt: {}
-  ruby: {}
-  s: {}
-  samp: {}
+  rp: Vue.HTMLAttributes
+  rt: Vue.HTMLAttributes
+  ruby: Vue.HTMLAttributes
+  s: Vue.HTMLAttributes
+  samp: Vue.HTMLAttributes
   script: Vue.ScriptHTMLAttributes
-  section: {}
+  section: Vue.HTMLAttributes
   select: Vue.SelectHTMLAttributes
-  small: {}
+  small: Vue.HTMLAttributes
   source: Vue.SourceHTMLAttributes
-  span: {}
-  strong: {}
+  span: Vue.HTMLAttributes
+  strong: Vue.HTMLAttributes
   style: Vue.StyleHTMLAttributes
-  sub: {}
-  summary: {}
-  sup: {}
+  sub: Vue.HTMLAttributes
+  summary: Vue.HTMLAttributes
+  sup: Vue.HTMLAttributes
   table: Vue.TableHTMLAttributes
-  tbody: {}
+  template: Vue.HTMLAttributes
+  tbody: Vue.HTMLAttributes
   td: Vue.TdHTMLAttributes
   textarea: Vue.TextareaHTMLAttributes
-  tfoot: {}
+  tfoot: Vue.HTMLAttributes
   th: Vue.ThHTMLAttributes
-  thead: {}
+  thead: Vue.HTMLAttributes
   time: Vue.TimeHTMLAttributes
-  title: {}
-  tr: {}
+  title: Vue.HTMLAttributes
+  tr: Vue.HTMLAttributes
   track: Vue.TrackHTMLAttributes
-  u: {}
-  ul: {}
-  var: {}
+  u: Vue.HTMLAttributes
+  ul: Vue.HTMLAttributes
+  var: Vue.HTMLAttributes
   video: Vue.VideoHTMLAttributes
-  wbr: {}
+  wbr: Vue.HTMLAttributes
+  webview: Vue.WebViewHTMLAttributes
+
+  // SVG
+  svg: Vue.SVGAttributes
+
+  animate: Vue.SVGAttributes
+  animateMotion: Vue.SVGAttributes
+  animateTransform: Vue.SVGAttributes
+  circle: Vue.SVGAttributes
+  clipPath: Vue.SVGAttributes
+  defs: Vue.SVGAttributes
+  desc: Vue.SVGAttributes
+  ellipse: Vue.SVGAttributes
+  feBlend: Vue.SVGAttributes
+  feColorMatrix: Vue.SVGAttributes
+  feComponentTransfer: Vue.SVGAttributes
+  feComposite: Vue.SVGAttributes
+  feConvolveMatrix: Vue.SVGAttributes
+  feDiffuseLighting: Vue.SVGAttributes
+  feDisplacementMap: Vue.SVGAttributes
+  feDistantLight: Vue.SVGAttributes
+  feDropShadow: Vue.SVGAttributes
+  feFlood: Vue.SVGAttributes
+  feFuncA: Vue.SVGAttributes
+  feFuncB: Vue.SVGAttributes
+  feFuncG: Vue.SVGAttributes
+  feFuncR: Vue.SVGAttributes
+  feGaussianBlur: Vue.SVGAttributes
+  feImage: Vue.SVGAttributes
+  feMerge: Vue.SVGAttributes
+  feMergeNode: Vue.SVGAttributes
+  feMorphology: Vue.SVGAttributes
+  feOffset: Vue.SVGAttributes
+  fePointLight: Vue.SVGAttributes
+  feSpecularLighting: Vue.SVGAttributes
+  feSpotLight: Vue.SVGAttributes
+  feTile: Vue.SVGAttributes
+  feTurbulence: Vue.SVGAttributes
+  filter: Vue.SVGAttributes
+  foreignObject: Vue.SVGAttributes
+  g: Vue.SVGAttributes
+  image: Vue.SVGAttributes
+  line: Vue.SVGAttributes
+  linearGradient: Vue.SVGAttributes
+  marker: Vue.SVGAttributes
+  mask: Vue.SVGAttributes
+  metadata: Vue.SVGAttributes
+  mpath: Vue.SVGAttributes
+  path: Vue.SVGAttributes
+  pattern: Vue.SVGAttributes
+  polygon: Vue.SVGAttributes
+  polyline: Vue.SVGAttributes
+  radialGradient: Vue.SVGAttributes
+  rect: Vue.SVGAttributes
+  stop: Vue.SVGAttributes
+  switch: Vue.SVGAttributes
+  symbol: Vue.SVGAttributes
+  text: Vue.SVGAttributes
+  textPath: Vue.SVGAttributes
+  tspan: Vue.SVGAttributes
+  use: Vue.SVGAttributes
+  view: Vue.SVGAttributes
 }
 
 export const ThemeProvider: Vue.DefineComponent<{ theme: object }>
