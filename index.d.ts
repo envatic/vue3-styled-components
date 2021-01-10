@@ -226,5 +226,7 @@ interface IntrinsicElementAttributes {
 
 export const ThemeProvider: Vue.DefineComponent<{ theme: object }>
 
+export const css: (input: TemplateStringsArray) => string
+
 export const styled: Styled
 export default styled
