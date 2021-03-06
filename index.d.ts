@@ -236,5 +236,7 @@ export const ThemeProvider: Vue.DefineComponent<ThemeObject>
 
 export const css: (input: TemplateStringsArray) => string
 
+export const css: (input: TemplateStringsArray) => string
+
 export const styled: Styled
 export default styled
