@@ -13,23 +13,28 @@ type CSS = CSSProperties
 
 type Component = Vue.Component | Vue.DefineComponent
 
+type ThemeObject = { theme: { type: any; required: true } }
+
 type StyledHTMLElement = {
   [K in keyof IntrinsicElementAttributes]: (
-    str: TemplateStringsArray
+    str: TemplateStringsArray,
+    ...placeholders: ((
+      props: Vue.ExtractPropTypes<ThemeObject>
+    ) => string | { toString: () => string })[]
   ) => Vue.DefineComponent<IntrinsicElementAttributes[K]>
 }
 
 type StyledFunctionHTMLElement = {
   <
     Props = { [key: string]: Vue.Prop<unknown> },
-    K extends keyof IntrinsicElementAttributes
+    K extends keyof IntrinsicElementAttributes = any
   >(
     component: K,
     props?: Props
   ): (
     str: TemplateStringsArray,
     ...placeholders: ((
-      props: Vue.ExtractPropTypes<Props>
+      props: Vue.ExtractPropTypes<Props & ThemeObject>
     ) => string | { toString: () => string })[]
   ) => Vue.DefineComponent<
     Vue.ExtractPropTypes<Props> & IntrinsicElementAttributes[K]
@@ -38,7 +43,10 @@ type StyledFunctionHTMLElement = {
 
 type StyledVueComponent = {
   <Props, T extends Component>(component: T): (
-    str: TemplateStringsArray
+    str: TemplateStringsArray,
+    ...placeholders: ((
+      props: Vue.ExtractPropTypes<ThemeObject>
+    ) => string | { toString: () => string })[]
   ) => Vue.DefineComponent<Props> & T
 }
 
@@ -224,7 +232,7 @@ interface IntrinsicElementAttributes {
   view: Vue.SVGAttributes
 }
 
-export const ThemeProvider: Vue.DefineComponent<{ theme: object }>
+export const ThemeProvider: Vue.DefineComponent<ThemeObject>
 
 export const css: (input: TemplateStringsArray) => string
 
