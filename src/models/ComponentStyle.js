@@ -2,7 +2,7 @@
 import hashStr from '../vendor/glamor/hash'
 import flatten from '../utils/flatten'
 import styleSheet from './StyleSheet'
-import { serialize, compile, middleware, namespace, stringify, prefixer } from 'stylis'
+import { serialize, compile, middleware, stringify, prefixer } from 'stylis'
 
 export default (nameGenerator) => {
   const inserted = {}

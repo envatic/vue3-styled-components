@@ -4,7 +4,7 @@ export default {
   props: {
     theme: Object
   },
-  setup (props, { slots }) {
+  setup (props) {
     provide('theme', props.theme)
   },
 
