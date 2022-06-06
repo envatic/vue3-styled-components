@@ -1,4 +1,4 @@
-import {createApp} from 'vue';
+import {mount} from "@vue/test-utils"
 
 import { resetStyled, expectCSSMatches } from './utils'
 
@@ -14,7 +14,7 @@ describe('css features', () => {
     const Comp = styled.div`
       transition: opacity 0.3s;
     `
-    const vm = createApp(Comp).mount('body')
+    const vm = mount(Comp)
     expectCSSMatches('.a {-webkit-transition: opacity 0.3s;transition: opacity 0.3s;}')
   })
 
@@ -24,7 +24,7 @@ describe('css features', () => {
       flex-direction: column;
       align-items: center;
     `
-    const vm = createApp(Comp).mount('body')
+    const vm = mount(Comp)
     expectCSSMatches(stripLineBreaks(`
       .a {
         display: -webkit-box;
@@ -46,15 +46,15 @@ describe('css features', () => {
     const Comp = styled.div`
       margin-bottom: calc(15px - 0.5rem) !important;
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {margin-bottom: calc(15px - 0.5rem) !important;}')
+    const vm = mount(Comp)
+      expectCSSMatches('.a{margin-bottom:calc(15px - 0.5rem)!important;}')
   })
 
   it('should pass through custom properties', () => {
     const Comp = styled.div`
       --custom-prop: some-val;
     `
-    const vm = createApp(Comp).mount('body')
+    const vm = mount(Comp)
     expectCSSMatches('.a {--custom-prop: some-val;}')
   })
 })

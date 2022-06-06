@@ -1,5 +1,6 @@
-import Vue from 'vue';
-import {createApp} from 'vue';
+class SVGElement extends HTMLElement { }
+global.SVGElement = SVGElement
+import { mount } from '@vue/test-utils'
 import { resetStyled, expectCSSMatches } from './utils'
 
 let styled
@@ -16,8 +17,9 @@ describe('with styles', () => {
     const rule = 'color: blue;'
     const Comp = styled.div`
         ${rule}
+        .love
       `
-    const vm = createApp(Comp).mount('body')
+    const vm =  mount(Comp)
     expectCSSMatches('.a {color: blue;}')
   })
 
@@ -28,7 +30,7 @@ describe('with styles', () => {
         ${rule1}
         ${rule2}
       `
-    const vm = createApp(Comp).mount('body')
+    const vm =  mount(Comp)
     expectCSSMatches('.a {color: blue;background: red;}')
   })
 
@@ -39,7 +41,7 @@ describe('with styles', () => {
     const Comp = styled.div`
         ${rule1}
       `
-    const vm = createApp(Comp).mount('body')
+    const vm =  mount(Comp)
     expectCSSMatches('.a {background-color: blue;}')
   })
 
@@ -53,11 +55,11 @@ describe('with styles', () => {
     const Comp = styled.div`
         ${rule1}
       `
-    const vm = createApp(Comp).mount('body')
+    const vm =  mount(Comp)
     expectCSSMatches('.a {background-color: blue;}@media screen and (min-width: 250px) {.a {background-color: red;}}')
   })
 
-  it('should handle inline style objects with pseudo selectors', () => {
+  it('should handle inline style objects with deep selectors', () => {
     const rule1 = {
       backgroundColor: 'blue',
       '&:hover': {
@@ -67,8 +69,8 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {background-color: blue;}.a:hover {-webkit-text-decoration: underline;text-decoration: underline;}')
+    const vm =  mount(Comp)
+    expectCSSMatches('.a{background-color:blue;}.a:hover{-webkit-text-decoration:underline;text-decoration:underline;}')
   })
 
   it('should handle inline style objects with pseudo selectors', () => {
@@ -81,8 +83,8 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {background-color: blue;}.a:hover {-webkit-text-decoration: underline;text-decoration: underline;}')
+    const vm =  mount(Comp)
+      expectCSSMatches('.a{background-color:blue;}.a:hover{-webkit-text-decoration:underline;text-decoration:underline;}')
   })
 
   it('should handle inline style objects with nesting', () => {
@@ -95,8 +97,8 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {background-color: blue;}.a > h1 {color: white;}')
+    const vm =  mount(Comp)
+      expectCSSMatches('.a{background-color:blue;}.a >h1{color:white;}')
   })
 
   it('should handle inline style objects with contextual selectors', () => {
@@ -109,8 +111,8 @@ describe('with styles', () => {
     const Comp = styled.div`
       ${rule1}
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {background-color: blue;}html.something .a {color: white;}')
+    const vm =  mount(Comp)
+      expectCSSMatches('.a{background-color:blue;}html.something .a{color:white;}')
   })
 
   it('should inject styles of multiple components', () => {
@@ -123,10 +125,10 @@ describe('with styles', () => {
         ${secondRule}
       `
 
-    const vm1 = createApp(FirstComp).mount('body')
-    const vm2 = createApp(SecondComp).mount('body')
+    const vm1 =  mount(FirstComp)
+    const vm2 =  mount(SecondComp)
 
-    expectCSSMatches('.a {background: blue;} .b {background: red;}')
+      expectCSSMatches('.a{background:blue;} .b{background:red;}')
   })
 
   it('should inject styles of multiple components based on creation, not rendering order', () => {
@@ -140,14 +142,11 @@ describe('with styles', () => {
       `
 
     // Switch rendering order, shouldn't change injection order
-    const vm2 = createApp(SecondComp).mount('body')
-    const vm1 = createApp(FirstComp).mount('body')
+    const vm2 =  mount(SecondComp)
+    const vm1 =  mount(FirstComp)
 
     // Classes _do_ get generated in the order of rendering but that's ok
-    expectCSSMatches(`
-        .b {content: "first rule";}
-        .a {content: "second rule";}
-      `)
+      expectCSSMatches(`.b{content:"first rule";} .a{content:"second rule";}`)
   })
 
   it('should strip a JS-style (invalid) comment in the styles', () => {
@@ -157,7 +156,7 @@ describe('with styles', () => {
         ${comment}
         ${rule}
       `
-    const vm = createApp(Comp).mount('body')
+    const vm =  mount(Comp)
     expectCSSMatches(`
         .a {color: blue;}
       `)

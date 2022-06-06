@@ -1,5 +1,5 @@
-import { h, createApp } from 'vue'
-
+import { h, } from 'vue'
+import { mount } from '@vue/test-utils'
 import { resetStyled, expectCSSMatches } from './utils'
 import ThemeProvider from "../providers/ThemeProvider"
 
@@ -16,8 +16,8 @@ describe('props', () => {
     const Comp = styled('div', compProps)`
       color: ${props => props.fg || 'black'};
     `
-    const vm = createApp(Comp).mount('body')
-    expectCSSMatches('.a {color: black;}')
+    const vm = mount(Comp)
+    expectCSSMatches('.a{color:black;}')
   })
 
   it('should add any injected theme to the component', () => {
@@ -42,7 +42,7 @@ describe('props', () => {
       }
     }
 
-    const vm = createApp(Themed).mount('body')
-    expectCSSMatches('.a {color: blue;}')
+    const vm = mount(Themed)
+    expectCSSMatches('.a{color:blue;}')
   })
 })

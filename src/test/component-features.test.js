@@ -1,79 +1,84 @@
-import {createApp} from 'vue';
-import expect from 'expect'
 
-import styleSheet from '../models/StyleSheet'
+import expect from 'expect'
+import { mount } from '@vue/test-utils';
 import { resetStyled } from './utils'
 
 let styled
 
 describe('component features', () => {
-  /**
-   * Make sure the setup is the same for every test
-   */
-  beforeEach(() => {
-    styled = resetStyled()
-  })
+    /**
+     * Make sure the setup is the same for every test
+     */
+    beforeEach(() => {
+        styled = resetStyled()
+    })
 
-  it('default slot', () => {
-    const Comp = {
-      template: `<div><slot>FallbackContent</slot></div>`
-    }
-    const StyledComp = styled(Comp)`
+    it('default slot', () => {
+        const Comp = {
+            provide: { theme: {} },
+            template: `<div><slot>FallbackContent</slot></div>`
+        }
+        const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = createApp({
-      components: { StyledComp },
-      template: `<styled-comp>ActualContent</styled-comp>`
-    }).mount('body')
-    expect(vm.$el.innerHTML).toEqual('ActualContent')
-  })
-  it('named slot', () => {
-    const Comp = {
-      template: `<div><slot name='content'>FallbackContent</slot></div>`
-    }
-    const StyledComp = styled(Comp)`
+        const vm = mount({
+            provide: { theme: {} },
+            components: { StyledComp },
+            template: `<styled-comp>ActualContent</styled-comp>`
+        })
+        expect(vm.element.innerHTML).toEqual('ActualContent')
+    })
+    it('named slot', () => {
+        const Comp = {
+            provide: { theme: {} },
+            template: `<div><slot name='content'>FallbackContent</slot></div>`
+        }
+        const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = createApp({
-      components: { StyledComp },
-      template: `
+        const vm = mount({
+            provide: { theme: {} },
+            components: { StyledComp },
+            template: `
         <styled-comp>
           <template v-slot:content>ActualContent</template>
         </styled-comp>`
-    }).mount('body')
-    expect(vm.$el.innerHTML).toEqual('ActualContent')
-  })
-  it('scoped slot', () => {
-    const Comp = {
-      template: `<div><slot name="default" :p='"ActualContent"'>FallbackContent</slot></div>`
-    }
-    const StyledComp = styled(Comp)`
+        })
+        expect(vm.element.innerHTML).toEqual('ActualContent')
+    })
+    it('scoped slot', () => {
+        const Comp = {
+            provide: { theme: {} },
+            template: `<div><slot name="default" :p='"ActualContent"'>FallbackContent</slot></div>`
+        }
+        const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = createApp({
-      components: { StyledComp },
-      template: `
+        const vm = mount({
+            provide: { theme: {} },
+            components: { StyledComp },
+            template: `
         <styled-comp>
           <template #default='{ p }'>{{ p }}</template>
         </styled-comp>`
-    }).mount('body')
-    expect(vm.$el.innerHTML).toEqual('ActualContent')
-  })
-  it('named scoped slot', () => {
-    const Comp = {
-      template: `<div><slot name='content' :p='"ActualContent"'>FallbackContent</slot></div>`
-    }
-    const StyledComp = styled(Comp)`
+        })
+        expect(vm.element.innerHTML).toEqual('ActualContent')
+    })
+    it('named scoped slot', () => {
+        const Comp = {
+            template: `<div><slot name='content' :p='"ActualContent"'>FallbackContent</slot></div>`
+        }
+        const StyledComp = styled(Comp)`
       color: blue;
     `
-    const vm = createApp({
-      components: { StyledComp },
-      template: `
-        <styled-comp>
+        const vm = mount({
+            components: { StyledComp },
+            template: `
+        <StyledComp>
           <template #content='{ p }'>{{ p }}</template>
-        </styled-comp>`
-    }).mount('body')
-    expect(vm.$el.innerHTML).toEqual('ActualContent')
-  })
+        </StyledComp>`
+        })
+        expect(vm.element.innerHTML).toEqual('ActualContent')
+    })
 
 })

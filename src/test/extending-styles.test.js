@@ -1,4 +1,4 @@
-import {createApp} from 'vue'
+import { mount } from '@vue/test-utils'
 
 import { resetStyled, expectCSSMatches } from './utils'
 
@@ -17,8 +17,8 @@ describe('extending styled', () => {
       background: green;
     `
 
-    const b = createApp(Base).mount('body')
-    const e = createApp(Extended).mount('body')
+    const b = mount(Base)
+    const e = mount(Extended)
 
     expectCSSMatches('.a {color: blue;} .b {color: blue;background: green;}')
   })

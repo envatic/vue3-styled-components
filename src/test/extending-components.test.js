@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { mount } from '@vue/test-utils'
 import expect from 'expect'
 
 import { resetStyled, expectCSSMatches } from './utils'
@@ -18,8 +18,8 @@ describe('extending components', () => {
     const Parent = styled.div``
     const Child = styled(Parent)``
 
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
+    const p = mount(Parent)
+    const c = mount(Child)
 
     expectCSSMatches('.a {}')
   })
@@ -28,20 +28,16 @@ describe('extending components', () => {
   it('should generate a single class if only parent has styles', () => {
     const Parent = styled.div`color: blue;`
     const Child = styled(Parent)``
-
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
-
+    const p = mount(Parent)
+    const c = mount(Child)
     expectCSSMatches('.a {color: blue;}')
   })
 
   it('should generate a single class if only child has styles', () => {
     const Parent = styled.div`color: blue;`
     const Child = styled(Parent)``
-
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
-
+    const p = mount(Parent)
+    const c = mount(Child)
     expectCSSMatches('.a {color: blue;}')
   })
 
@@ -49,8 +45,8 @@ describe('extending components', () => {
     const Parent = styled.div`background-color: blue;`
     const Child = styled(Parent)`color: red;`
 
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
+    const p = mount(Parent)
+    const c = mount(Child)
 
     expectCSSMatches('.a {background-color: blue;} .b {color: red;}')
   })
@@ -59,8 +55,8 @@ describe('extending components', () => {
     const Parent = styled.div`color: blue;`
     const Child = styled(Parent)`color: red;`
 
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
+    const p = mount(Parent)
+    const c = mount(Child)
 
     expectCSSMatches('.a {color: blue;} .b {color: red;}')
   })
@@ -72,10 +68,10 @@ describe('extending components', () => {
     `
     const Child = styled(Parent)`color: red;`
 
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
+    const p = mount(Parent)
+    const c = mount(Child)
 
-    expectCSSMatches('.a {color: blue;}.a > h1 {font-size: 4rem;} .b {color: red;}')
+      expectCSSMatches(`.a{color:blue;}.a >h1{font-size:4rem;} .b{color:red;}`)
   })
 
   it('should keep default props from parent', () => {
@@ -92,8 +88,8 @@ describe('extending components', () => {
 
     const Child = styled(Parent)`background-color: green;`
 
-    const p = createApp(Parent).mount('body')
-    const c = createApp(Child).mount('body')
+    const p = mount(Parent)
+    const c = mount(Child)
 
     expectCSSMatches(`
       .a {color: red;}
@@ -114,8 +110,8 @@ describe('extending components', () => {
 
     const Child = styled(Parent)`background-color: green;`
 
-    const c = createApp(Child).mount('body')
-    const p = createApp(Parent).mount('body')
+    const c = mount(Child)
+    const p = mount(Parent)
 
     expect(c.$props).toEqual(p.$props)
   })

@@ -1,6 +1,6 @@
-import { createApp } from 'vue';
-import expect from 'expect'
 
+import expect from 'expect'
+import { mount, shallowMount } from '@vue/test-utils'
 import injectGlobal from '../injectGlobal'
 import styleSheet from '../../models/StyleSheet'
 import { expectCSSMatches, resetStyled } from '../../test/utils'
@@ -46,13 +46,13 @@ describe('injectGlobal', () => {
     const Comp = styled.div`
       ${rule3}
     `
-    const vm = createApp(Comp).mount('body');
-
+    const vm = mount(Comp);
     injectGlobal`
       html {
         ${rule1}
       }
-    `
+    ` 
+      
     // Test the component sheet
     expectCSSMatches(`
       .a {${rule3}}

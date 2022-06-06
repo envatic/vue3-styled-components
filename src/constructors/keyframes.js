@@ -1,5 +1,5 @@
 import StyleSheet from '../models/StyleSheet'
-import hashStr from 'glamor/lib/hash'
+import hashStr from '../vendor/glamor/hash'
 import generateAlphabeticName from '../utils/generateAlphabeticName'
 
 const replaceWhitespace = str => str.replace(/\s|\\n/g, '')
