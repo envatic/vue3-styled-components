@@ -23,7 +23,6 @@
   "dependencies": {
     "@babel/runtime": "^7.18.3",
     "core-js": "^3.8.3",
-    "danger": "^11.0.7",
     "inline-style-prefixer": "^6.0.1",
     "lodash.isplainobject": "^4.0.6",
     "lodash.zipobject": "^4.1.3",

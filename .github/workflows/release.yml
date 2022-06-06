@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - main
 jobs:
   release:
     name: Release
@@ -40,7 +39,7 @@ jobs:
           npm ci
           npx semantic-release
           npm run build --if-present
-          npm test
+          npm run test
       - name: Publish
         run: |
           npm config set //registry.npmjs.org/:_authToken ${NPM_TOKEN}
