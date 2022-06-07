@@ -24,15 +24,13 @@ export default (nameGenerator) => {
     generateAndInjectStyles (executionContext) {
       const flatCSS = flatten(this.rules, executionContext).join('')
         .replace(/^\s*\/\/.*$/gm, '') // replace JS comments
-        console.log(`flatCSS===========>${flatCSS}`)
       const hash = hashStr(flatCSS)
       if (!inserted[hash]) {
         const selector = nameGenerator(hash)
         inserted[hash] = selector
         //const css = stylis(`.${selector}`, flatCSS)
         const css = serialize(compile(`.${selector}{${flatCSS}}`), middleware([prefixer, stringify]))
-         //console.log(`css ======> :${css} selector ====> ${selector}`) 
-        this.insertedRule.appendRule(css)
+         this.insertedRule.appendRule(css)
       }
       return inserted[hash]
     }

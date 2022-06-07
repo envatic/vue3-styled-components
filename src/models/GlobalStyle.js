@@ -24,7 +24,6 @@ export default class ComponentStyle {
     generateAndInject() { 
         if (!styleSheet.injected) styleSheet.inject()
         const flatCSS = flatten(this.rules).join('')
-        console.log(`GlobalCss: ${flatCSS}`)
         const cssString = this.selector ? `${this.selector} { ${flatCSS} }` : flatCSS
         const css = serialize(compile(cssString), middleware([namespace, stringify]))
         styleSheet.insert(css, { global: true })

@@ -31,11 +31,7 @@ export const expectCSSMatches = (
 ) => {
   const { ignoreWhitespace = true, styleSheet = mainStyleSheet } = opts;
   const css = styleSheet.rules().map(rule => rule.cssText).join('\n')
-    console.log(`final expected: ${stripWhitespace(expectation)}`);
-    console.log(`final got: ${stripWhitespace(css)}`);
-    
   if (ignoreWhitespace) {
-      console.log('whdfioewhnfewifweifewirnwie===========>');
     expect(stripWhitespace(css)).toEqual(stripWhitespace(expectation))
   } else {
     expect(css).toEqual(expectation)
